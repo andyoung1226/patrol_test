@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script src="../include/EaselJS/easeljs.js"></script>
+<script src="../include/EventEmitter2/eventemitter2.js"></script>
+<script src="../include/roslibjs/roslib.js"></script>
+<script src="../include/ros2djs/ros2d.js"></script>
+<script src="../build/navigation_2d.js"></script>
+
+<script>
+	/**
+	 * Setup all visualization elements when the page is loaded. 
+	 */
+	function init() {
+		// Connect to ROS.
+		var ros = new ROSLIB.Ros({
+			url : 'ws://localhost:9090'
+		});
+
+		// Create the main viewer.
+		var viewer = new ROS2D.Viewer({
+			divID : 'map',
+			width : 600,
+			height : 600
+		});
+
+		// Add zoom to the viewer.
+		var zoomView = new ROS2D.ZoomView({
+			rootObject : viewer.scene
+		});
+		// Add panning to the viewer.
+		var panView = new ROS2D.PanView({
+			rootObject : viewer.scene
+		});
+
+		// Setup the map client.
+		var gridClient = new ROS2D.OccupancyGridClient({
+			ros : ros,
+			rootObject : viewer.scene
+		});
+
+		// Add planned path
+		var plannedPath = new NAVIGATION2D.NavPath({
+			ros : ros,
+			rootObject : viewer.scene,
+			pathTopic : '/waypoint_planner/future_plan'
+		});
+
+		// Add robot pose and trace
+		var robotTrace = new NAVIGATION2D.PoseAndTrace({
+			ros : ros,
+			rootObject : viewer.scene,
+			poseTopic : '/robot_pose',
+			withTrace : true,
+			maxTraceLength : 200
+		});
+
+		// Add navigation goal
+		var navGoal = new NAVIGATION2D.NavGoal({
+			ros : ros,
+			rootObject : viewer.scene,
+			actionTopic : '/move_base'
+		});
+
+		// Scale the canvas to fit to the map
+		gridClient.on('change', function() {
+			viewer.scaleToDimensions(gridClient.currentGrid.width, gridClient.currentGrid.height);
+			viewer.shift(gridClient.currentGrid.pose.position.x, gridClient.currentGrid.pose.position.y);
+			plannedPath.initScale();
+			robotTrace.initScale();
+			navGoal.initScale();
+			registerMouseHandlers();
+		});
+
+/*
+		// Button
+		var buttonSelArea = new NAVIGATION2D.Button({
+			text : "Select area to clean"
+		});
+		buttonSelArea.x = 10;
+		buttonSelArea.y = -10;
+		viewer.scene.addChild(buttonSelArea);
+*/
+		var selectArea = false;
+		document.getElementById("buttonAreaSelect").onclick = function () {
+			selectArea = !selectArea;
+			if (selectArea) {
+				document.getElementById("buttonAreaSelect").value = "Done";
+				document.getElementById("buttonAreaClear").disabled = false;
+				polygon.linesVisible(true);
+				polygon.pointsVisible(true);
+			}
+			else {
+				if (polygon.getSize() > 0) {
+					document.getElementById("buttonAreaSelect").value = "Edit area";
+					
+					for (var i=0; i<polygon.pointContainer.getNumChildren(); ++i) {
+						console.log("bounds: " +
+							polygon.pointContainer.getChildAt(i)._bounds.x + " " +
+							-polygon.pointContainer.getChildAt(i)._bounds.y + " " +
+							polygon.pointContainer.getChildAt(i)._bounds.width  + " " +
+							polygon.pointContainer.getChildAt(i)._bounds.height);
+						var bl = viewer.scene.globalToRos(polygon.pointContainer.getChildAt(i)._bounds.x, -polygon.pointContainer.getChildAt(i)._bounds.y);
+						var tr = viewer.scene.globalToRos(polygon.pointContainer.getChildAt(i)._bounds.x + polygon.pointContainer.getChildAt(i)._bounds.width, -polygon.pointContainer.getChildAt(i)._bounds.y + polygon.pointContainer.getChildAt(i)._bounds.height);
+						//console.log("bounds globalToRos: " + bl.x + " " + bl.y + " " + tr.x + " " + tr.y);
+					}
+					console.log("polygon bound: " + 
+						polygon.getBounds().x + " " + 
+						-polygon.getBounds().y  + " " + 
+						polygon.getBounds().width + " " + 
+						polygon.getBounds().height);
+
+					var areaTopic = new ROSLIB.Topic({
+						ros : ros,
+						name : "/PolyAreaSelect/cleaning_area",
+						messageType : "PolyAreaSelect/CleaningArea"
+					});
+//					var lowerLeft = new ROSLIB.Vector3({
+//						x : 
+//						y : polygon.getBounds().y,
+//						z : 0
+//					});
+//					var upperRight = new ROSLIB.Vector3({
+//						x : polygon.getBounds().x + polygon.getBounds().width,
+//						y : polygon.getBounds().y + polygon.getBounds().height,
+//						z : 0
+//					});
+					var lowerLeft = viewer.scene.globalToRos(polygon.getBounds().x, polygon.getBounds().y);
+					var upperRight = viewer.scene.globalToRos(polygon.getBounds().x + polygon.getBounds().width, polygon.getBounds().y + polygon.getBounds().height);
+					var areaMsg = new ROSLIB.Message({
+						lowerLeft : lowerLeft,
+						upperRight : upperRight
+					});
+					areaTopic.publish(areaMsg);
+				}
+				else {
+					document.getElementById("buttonAreaSelect").value = "Select area";
+				}
+				document.getElementById("buttonAreaClear").disabled = true;
+				polygon.linesVisible(false);
+				polygon.pointsVisible(false);
+			}
+		}
+
+		document.getElementById("buttonAreaClear").onclick = function () {
+			if (selectArea) {
+				polygon.clear();
+			}
+		}
+		document.getElementById("buttonAreaClear").disabled = true
+
+
+		// Callback functions when there is mouse interaction with the polygon
+		var clickedPolygon = false;
+		var selectedPointIndex = null;
+
+		var pointCallBack = function(type, event, index) {
+			if (selectArea === true) {
+				if (type === 'mousedown') {
+					if (event.nativeEvent.shiftKey === true) {
+						polygon.remPoint(index);
+					}
+					else {
+						selectedPointIndex = index;
+					}
+				}
+			}
+			clickedPolygon = true;
+		};
+
+
+		// Create the polygon
+		var polygon = new ROS2D.PolygonMarker({
+			lineColor : createjs.Graphics.getRGB(100, 100, 255, 1),
+			lineSize : 0.1,
+			pointSize : 0.2,
+			pointCallBack : pointCallBack
+//			lineCallBack : lineCallBack
+		});
+	
+		// Add the polygon to the viewer
+		viewer.scene.addChild(polygon);
+
+
+
+
+
+		function registerMouseHandlers() {
+			// Setup mouse event handlers
+			var mouseDown = false;
+			var zoomKey = false;
+			var panKey = false;
+			var startPos = new ROSLIB.Vector3();
+			viewer.scene.addEventListener('stagemousedown', function(event) {
+				if (event.nativeEvent.ctrlKey === true) {
+					zoomKey = true;
+					zoomView.startZoom(event.stageX, event.stageY);
+				}
+				else if (event.nativeEvent.shiftKey === true) {
+					panKey = true;
+					panView.startPan(event.stageX, event.stageY);
+				}
+				else if (selectArea === true) {
+					
+				}
+				else {
+					var pos = viewer.scene.globalToRos(event.stageX, event.stageY);
+					navGoal.startGoalSelection(pos);
+				}
+				startPos.x = event.stageX;
+				startPos.y = event.stageY;
+				mouseDown = true;
+			});
+
+			viewer.scene.addEventListener('stagemousemove', function(event) {
+				if (mouseDown === true) {
+					if (zoomKey === true) {
+						var dy = event.stageY - startPos.y;
+						var zoom = 1 + 10*Math.abs(dy) / viewer.scene.canvas.clientHeight;
+						if (dy < 0)
+							zoom = 1 / zoom;
+						zoomView.zoom(zoom);
+					}
+					else if (panKey === true) {
+						panView.pan(event.stageX, event.stageY);
+					}
+					else if (selectArea === true) {
+						// Move point when it's dragged
+						if (selectedPointIndex !== null) {
+							var pos = viewer.scene.globalToRos(event.stageX, event.stageY);
+							polygon.movePoint(selectedPointIndex, pos);
+						}
+					}
+					else {
+						var pos = viewer.scene.globalToRos(event.stageX, event.stageY);
+						navGoal.orientGoalSelection(pos);
+					}
+				}
+			});
+
+			viewer.scene.addEventListener('stagemouseup', function(event) {
+				if (mouseDown === true) {
+					if (zoomKey === true) {
+
+					}
+					else if (panKey === true) {
+
+					}
+					else if (selectArea === true) {
+						if (selectedPointIndex !== null) {
+							selectedPointIndex = null;
+						}
+						else if (viewer.scene.mouseInBounds === true && clickedPolygon === false) {
+							var pos = viewer.scene.globalToRos(event.stageX, event.stageY);
+							polygon.addPoint(pos);
+						}
+						clickedPolygon = false;
+					}
+					else {
+						var pos = viewer.scene.globalToRos(event.stageX, event.stageY);
+						var goalPose = navGoal.endGoalSelection(pos);
+						navGoal.sendGoal(goalPose);
+					}
+					zoomKey = false;
+					panKey = false;
+					mouseDown = false;
+				}
+			});
+		}
+	}
+</script>
+</head>
+
+<body onload="init()">
+	<h1>Navigation Example</h1>
+<!--
+	<p>
+		Run the following commands in the terminal then refresh this page. This will load a map from the
+		<tt>ros-groovy-rail-maps</tt>
+		package.
+	</p>
+	<ol>
+		<li><tt>roscore</tt></li>
+		<li><tt>rosrun map_server map_server /opt/ros/groovy/share/rail_maps/maps/ilab.pgm
+				0.05</tt></li>
+		<li><tt>roslaunch rosbridge_server rosbridge_websocket.launch</tt></li>
+		<li><tt>rosrun robot_pose_publisher robot_pose_publisher</tt></li>
+	</ol>
+-->
+	<div id="map"></div>
+	<input type="button" value="Select area" id="buttonAreaSelect">
+	<input type="button" value="Clear" id="buttonAreaClear">
+</body>
+</html>
