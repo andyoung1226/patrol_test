@@ -8,7 +8,7 @@ After=syslog.target
 
 [Service]
 
-ExecStart=/home/ubuntu/myvenv/bin/uwsgi -i /srv/django-deploy-test/.config/uwsgi/mysite.ini
+ExecStart=/home/ubuntu/patrol_test/bin/uwsgi -i /srv/patrol_test/.config/uwsgi/mysite.ini
 
  
 
