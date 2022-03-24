@@ -1,0 +1,155 @@
+{% load static %}
+ 
+<!DOCTYPE html>
+<html lang="ko">
+ 
+<head>
+    <meta charset="UTF-8">
+    <title>DY_WEB_TEST</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+ 
+    <!script src="{% static 'js/scripts.js' %}"><!/script>
+
+    <script type="text/javascript"src="{% static 'js/roslibjs/build/roslib.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/rosjsScripts/eventemitter2.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/rosjsScripts/roslib.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/rosjsScripts/easeljs.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/rosjsScripts/ros2d.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/rosjsScripts/mjpegcanvas.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/rosjsScripts/nav2d.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/virtual-joystick/joystick.js' %}"></script> 
+
+    <script type="text/javascript">
+		//ROS CONNECTION CHECK
+        var ros = new ROSLIB.Ros({
+            url : 'ws://0.0.0.0:9090'
+        });
+
+        ros.on('connection', function() {
+            console.log("connection!!!")
+            var fbDiv = document.getElementById('feedback');
+            fbDiv.innerHTML = "<p>Connected to Robot Operation System Server</p>";        });
+        ros.on('error', function(error) {
+            var fbDiv = document.getElementById('feedback');
+            fbDiv.innerHTML = "<p>Error connecting to websocket server</p>";  });		
+        ros.on('close', function() {
+            var fbDiv = document.getElementById('feedback');
+            fbDiv.innerHTML = "<p>Connection to websocket server closed</p>";
+        });
+        
+        var nav_viewer = 0;
+        var nav_client = 0;
+        function nav_and_map_init(){
+            nav_viewr = new ROS2D.Viewer({
+                divID : 'nav2dmap',
+                width : 500,
+                height : 500
+            });
+            nav_client = NAV2D.OccupancyGridClientNav({
+                ros : ros,
+                continuous: true,
+                rootObject : nav_viewer.scene,
+                viewer : nav_viewer,
+                serverName : '/move_base',
+                withOrientation : true
+            });
+        }
+        function cam_init() {
+	        var cam_viewer = new MJPEGCANVAS.Viewer({
+		        divID : 'mjpeg',
+		        host : 'localhost',
+		        width : 500,
+		        height : 500,
+		        topic : '/camera/rgb/image_raw'
+	        });
+        }
+        var odomTopic = new ROSLIB.Topic({
+            ros : ros,
+            name : '/odom',
+            messageType : 'nav_msgs/Odometry'
+        });
+        odomTopic.subscribe(function(message) {
+            var poseX = document.getElementById('poseX');
+            poseX.innerHTML  = "X = " + message.pose.pose.position.x
+            var poseY = document.getElementById('poseY');
+            poseY.innerHTML  = "Y = " + message.pose.pose.position.y
+            var poseTheta = document.getElementById('poseTheta');
+            poseTheta.innerHTML  = "Theta = " + message.pose.pose.orientation.w
+            var poseLinVel = document.getElementById('poseLinVel');
+            poseLinVel.innerHTML  = "LinVel = " + message.twist.twist.linear.x
+            var poseAngVel = document.getElementById('poseAngVel');
+            poseAngVel.innerHTML  = "AngVel = " + message.twist.twist.angular.z
+        });
+
+        var moveBaseStatusTopic = new ROSLIB.Topic({
+            ros : ros,
+            name : '/move_base/status',
+            messageType : 'actionlib_msgs/GoalStatusArray'
+        });
+        moveBaseStatusTopic.subscribe(function(message) {
+            var movebaseStatus = document.getElementById('movebaseStatus');
+            //movebaseStatus.innerHTML  = "Status: " + message.status_list[0].text
+        });
+        var cmdVelTopic = new ROSLIB.Topic({
+            ros : ros,
+            name : '/cmd_vel',
+            messageType : 'geometry_msgs/Twist'
+        });
+
+        var twist = new ROSLIB.Message({
+            linear : {
+                x : 0.0,
+                y : 0.0,
+                z : 0.0
+            },
+            angular : {
+                x : 0.0,
+                y : 0.0,
+                z : 0.0
+            }
+        });
+
+
+
+        //Joy
+        /*
+        window.addEventListener("load", function(){
+            var joystick = new JoyStick({
+                radius: 40,
+                x: window.innerWidth / 2,
+                y: window.innerHeight /2,
+                inner_radconnectionFeedbackius: 30
+            });
+            
+            var status = document.getElementById('status');
+            function run_all_time(){
+                if ( joystick.up ) twist.linear.x = 1;
+                if ( joystick.down ) twist.linear.x = -1;
+                if ( joystick.left ) twist.angular.z = -1;
+                if ( joystick.right ) twist.angular.z = 1;
+                //cmdVelTopic.publish(twist)
+                requestAnimationFrame( run_all_time );
+            }
+                run_all_time();
+            });
+        */
+        </script>
+</head>
+ 
+
+<body onload="cam_init(); nav_and_map_init();">
+    <div class="OpenMessage"><b>관악구 순찰로봇 관제 시스템</b></div>
+    <div class="PoseX" id="poseX"></div>
+    <div class="PoseY" id="poseY"></div>
+    <div class="PoseLinVel" id="poseLinVel"></div>
+    <div class="PoseTheta" id="poseTheta"></div>
+    <div class="PoseAngVel" id="poseAngVel"></div>
+    <div class="feedbackText" id="feedback"></div>
+    <div class="MoveBaseStatusText" id="movebaseStatus">Status:</div>
+    <div class="Nav2dmapText">2D Map and Control Window</div>
+    <div class="CamText" >RGB Camera</div>
+    <div class="nav2dmapCanvas" id="nav2dmap"></div>
+    <div class="camCanvas" id="mjpeg"></div>
+
+</body>
+</html>
