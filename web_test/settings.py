@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [u'127.0.0.1'
 , 'ec2-3-35-135-83.ap-northeast-2.compute.amazonaws.com'
-, '.patrolinu.shop']
+, '.patrollinu.shop']
 
 
 # Application definition
