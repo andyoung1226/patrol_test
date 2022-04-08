@@ -85,7 +85,7 @@
 
         // This function connects to the rosbridge server running on the local computer on port 9090
         var rbServer = new ROSLIB.Ros({
-            url : 'ws://localhost:9090'
+            url : 'ws://192.168.38.100:9090'
         });
 
         // This function is called upon the rosbridge connection event
@@ -378,9 +378,22 @@
             const value = target.value;
             console.log(value)
         }
+     
         function info_save() {
-            is_saved = true;
-            console.log("saved");
+            if (!confirm("저장하시겠습니까?")){
+                var text = 'Text to File'
+                var link = document.createElement('a');
+                link.download = 'file.text';
+                var blob = new Blob([script], {type: 'text/plain'});
+                link.href = window.URL.createObjectURL(blob);
+                link.click();                
+                is_saved = true;
+                console.log("saved");
+            }
+            else {
+                is_saved = false;
+            }
+            
             // save
         }
         </script>
