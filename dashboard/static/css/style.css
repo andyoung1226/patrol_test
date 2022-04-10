@@ -75,6 +75,10 @@ body{
   width: 100%;
   padding: 20px;
 }
+.navermap {
+  position: absolute;
+  opacity: 0.5;
+}
 /* Add a card effect for articles */
 .card {
   position: relative;
@@ -99,14 +103,14 @@ body{
 .map_con_card {
   position: absolute;
   background-color: white;
-  padding: 300px;
+  padding: 10px;
   margin-top: 5px;
 }
 .robot_con_card {
   position: absolute;
   top : 150px;
   background-color: white;
-  padding: 300px;
+  padding: 10px;
   margin-top: 5px;
 }
 /* Clear floats after the columns */
