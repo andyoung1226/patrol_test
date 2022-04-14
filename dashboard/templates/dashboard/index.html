@@ -206,10 +206,11 @@
         function cam_init() {
 	        var cam_viewer = new MJPEGCANVAS.Viewer({
 		        divID : 'mjpeg',
-		        host : 'localhost',
-		        width : 300,
-		        height : 300,
-		        topic : '/camera/rgb/image_raw'
+		        host : '192.168.38.100',
+                port : '8080',
+		        width : 1280,
+		        height : 960,
+		        topic : '/cam_1/color/image_raw'
 	        });
         }
 
@@ -445,7 +446,7 @@
     </head>
     <!HEAD END>
     <!BODY START>
-    <body onload="nav_and_map_init(); showClock(); load_time(); updateTimer(); ">
+    <body onload="nav_and_map_init(); showClock(); load_time(); updateTimer(); cam_init(); ">
         <! cam_init() >
         <! header >
         <div class="header">
@@ -485,10 +486,10 @@
                     </div>
                 </div>
               </div>
-              <!-- <div class="card">
+              <div class="card">
                 <h2>Camera</h2> 
-                <div id="camCanvas"></div>
-              </div>-->
+                <div id="mjpeg"></div>
+              </div>
             </div>
             <div class="rightcolumn">
                 <div class="card">
@@ -542,7 +543,7 @@
                     <h4>주행시간</h4>
                     <div id="div_timer"></div>
                     <h4>주행거리</h4>
-                    <div id="distance"></div>
+                    <div id="distance">0 m</div>
                     <button class="info_save_button" type="button" ="Up" onclick="info_save()">데이터 저장</button>
                 </div>
         </div>
