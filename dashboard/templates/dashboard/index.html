@@ -292,7 +292,7 @@
 
         distanceTopic.subscribe(function(m){
             var distance = document.getElementById('distance');
-            distance.innerHTML = m.data
+            distance.innerHTML = m.data + " m";
         })
         // These lines create a message to identify the twist message.Identifying the msg is required for publishing.
         // It initalizes all properties to zero. They will be set to appropriate values before we publish this message.
