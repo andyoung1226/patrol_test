@@ -1,8 +1,0 @@
-[Unit]
-Description=Patrol Server auto start service
-
-[Service]
-ExecStart=/home/unicon3/catkin_ws/src/django_test/web_test/start_server.sh
-ExecStop=/home/unicon3/catkin_ws/src/django_test/web_test/stop_server.sh
-[Install]
-WantedBy=multi-user.target
