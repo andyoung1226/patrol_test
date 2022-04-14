@@ -370,7 +370,7 @@
         }
         function LightOff() {
             var light = document.getElementById('light_status');
-            int16multiArray.data = [0, 1]
+            int16multiArray.data = [0, 0]
             light_con_topic.publish(int16multiArray)
             light.innerHTML = "<p> 라이트 : OFF </p>";
 
