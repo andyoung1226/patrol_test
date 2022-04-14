@@ -282,8 +282,18 @@
             ros : rbServer,
             name : '/relay_con_server',
             messageType : 'std_msgs/Int16MultiArray'
-        })
+        });
 
+        var distanceTopic = new ROSLIB.Topic({
+            ros : rbServer,
+            name : '/robot_distance',
+            messageType : 'std_msgs/Float32'
+        });
+
+        distanceTopic.subscribe(function(m){
+            var distance = document.getElementById('distance');
+            distance.innerHTML = m.data
+        })
         // These lines create a message to identify the twist message.Identifying the msg is required for publishing.
         // It initalizes all properties to zero. They will be set to appropriate values before we publish this message.
         var twist = new ROSLIB.Message({
@@ -532,6 +542,7 @@
                     <h4>주행시간</h4>
                     <div id="div_timer"></div>
                     <h4>주행거리</h4>
+                    <div id="distance"></div>
                     <button class="info_save_button" type="button" ="Up" onclick="info_save()">데이터 저장</button>
                 </div>
         </div>
