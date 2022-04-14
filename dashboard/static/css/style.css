@@ -268,24 +268,11 @@ body{
 .WarningLightOnButton{
   position:absolute;
   top:200px;
-  width:90px;
+  width:120px;
   height:70px;
   display:block;
-  left:0px;
-  color:#ffffff;
-  font-family:Courier New, Courier, monospace;
-  background-color:#88f011;
-  border:5px groove #000000;
-  font-weight:900;
-}
-.WarningLightOffButton{
-  position:absolute;
-  top:200px;
-  width:90px;
-  height:70px;
-  display:block;
-  left:90px;
-  color:#ffffff;
+  left:30px;
+  color:#000000;
   font-family:Courier New, Courier, monospace;
   background-color:#88f011;
   border:5px groove #000000;
@@ -295,45 +282,17 @@ body{
 .LightOnButton{
   position:absolute;
   top:200px;
-  width:90px;
+  width:120px;
   height:70px;
   display:block;
-  left:180px;
-  color:#ffffff;
+  left:170px;
+  color:#000000;
   font-family:Courier New, Courier, monospace;
   background-color:#cb11f0;
   border:5px groove #000000;
   font-weight:900;
 }
-.LightOffButton{
-  position:absolute;
-  top:200px;
-  width:90px;
-  height:70px;
-  display:block;
-  left:270px;
-  color:#ffffff;
-  font-family:Courier New, Courier, monospace;
-  background-color:#cd11f0;
-  border:5px groove #000000;
-  font-weight:900;
-}
-.warning_status{
-  position:absolute;
-  top:250px;
-  left:0px;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 20px;
-  font-weight: 40;
-}
-.light_status{
-  position:absolute;
-  top:250px;
-  left:100px;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 20px;
-  font-weight: 40;
-}
+
 
 .modal-overlay {
   width: 100%;

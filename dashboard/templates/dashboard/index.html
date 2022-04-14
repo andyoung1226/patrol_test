@@ -349,32 +349,38 @@
             console.log("EmergencyStop!")
         }
 
-        function WarningLightOn() {
-            var WarningLight = document.getElementById('warning_light_status');
-            int16multiArray.data = [1, 1]
-            light_con_topic.publish(int16multiArray)
-            WarningLight.innerHTML = "<p> 경광등 : ON </p>"; 
-        }
-        function WarningLightOff() {
-            var WarningLight = document.getElementById('warning_light_status');
-            int16multiArray.data = [1, 0]
-            light_con_topic.publish(int16multiArray)
-            WarningLight.innerHTML = "<p> 경광등 : OFF </p>"; 
+        var WarningLight_con = false;
+        var Light_con = false;
 
-        }
-        function LightOn() {
-            var light = document.getElementById('light_status');
-            int16multiArray.data = [0, 1]
+        function WarningLight() {
+            var WarningButton = document.getElementById('WarningButton');
+            if (WarningLight_con) {
+                int16multiArray.data = [1, 0]
+                WarningButton.innerHTML = "경광등 ON";
+                WarningLight_con = false;
+            }   
+            else {
+                int16multiArray.data = [1, 1];
+                WarningButton.innerHTML = "경광등 OFF";
+                WarningLight_con = true;
+            }
             light_con_topic.publish(int16multiArray)
-            light.innerHTML = "<p> 라이트 : ON </p>";
         }
-        function LightOff() {
-            var light = document.getElementById('light_status');
-            int16multiArray.data = [0, 0]
+        function Light() {
+            var WarningButton = document.getElementById('LightButton');
+            if (Light_con) {
+                int16multiArray.data = [0, 0]
+                WarningButton.innerHTML = "라이트 ON";
+                Light_con = false;
+            }
+            else {
+                int16multiArray.data = [0, 1];
+                WarningButton.innerHTML = "라이트 OFF";
+                Light_con = true;
+            }
             light_con_topic.publish(int16multiArray)
-            light.innerHTML = "<p> 라이트 : OFF </p>";
+        }
 
-        }
         function Patrol_1() {
 
         }
@@ -492,12 +498,8 @@
                         <button class="EmergencyStopButton" type="button" ="Up" onclick="EmergencyStop()">EMERGENCY STOP!</button>
                     </div>
                     <div class="robot_light_con">
-                        <button class="WarningLightOnButton" type="button" ="Up" onclick="WarningLightOn()">경광등 켜기</button>
-                        <button class="WarningLightOffButton" type="button" ="Up" onclick="WarningLightOff()">경광등 끄기</button>
-                        <button class="LightOnButton" type="button" ="Up" onclick="LightOn()">라이트 켜기</button>
-                        <button class="LightOffButton" type="button" ="Up" onclick="LightOff()">라이트 끄기</button>
-                        <div id="warning_light_status" class="warning_status">경광등 : OFF</div>
-                        <div id="light_status" class="light_status">라이트 : OFF</div>
+                        <button class="WarningLightOnButton" type="button" ="Up" id="WarningButton" onclick="WarningLight()">경광등 ON</button>
+                        <button class="LightOnButton" type="button" ="Up" onclick="Light()" id="LightButton">라이트 ON</button>
                     </div>
                 </div>
             </div>

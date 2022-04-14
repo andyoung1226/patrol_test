@@ -156,9 +156,9 @@ NAVIGATION2D.NavGoal.prototype.sendGoal = function(pose) {
 	
 	// create a marker for the goal
 	var goalMarker = new ROS2D.ArrowShape({
-		size : 10,
-		strokeSize : 1,
-		fillColor : createjs.Graphics.getRGB(255, 64, 128, 0.66),
+		size : 40,
+		strokeSize : 4,
+		fillColor : createjs.Graphics.getRGB(255, 64, 128, 1),
 		pulse : true
 	});
 	goalMarker.x = pose.position.x;
@@ -304,13 +304,13 @@ NAVIGATION2D.PoseAndTrace = function(options) {
 	if (!this.robotMarker) {
 		this.robotMarker = new ROS2D.ArrowShape({
 			size : robotSize,
-			strokeSize : 1,
+			strokeSize : 5,
 			strokeColor : robotColor,
 			fillColor : robotColor,
 			pulse : true
 		});
 	}
-	this.robotMarker.visible = false;
+	this.robotMarker.visible = true;
 	this.rootObject.addChild(this.robotMarker);
 	
 	this.initScaleSet = false;
