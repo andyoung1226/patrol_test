@@ -309,6 +309,11 @@ NAVIGATION2D.PoseAndTrace = function(options) {
 			fillColor : robotColor,
 			pulse : true
 		});
+		/*
+		this.robotMarker = new ROS2D.Viewer({
+			
+		})
+		*/
 	}
 	this.robotMarker.visible = true;
 	this.rootObject.addChild(this.robotMarker);
