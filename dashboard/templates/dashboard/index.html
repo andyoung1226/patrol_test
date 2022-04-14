@@ -214,6 +214,17 @@
                 quality : 30,
 		        topic : '/cam_1/color/image_raw'
 	        });
+
+	        var cam_viewer2 = new MJPEGCANVAS.Viewer({
+		        divID : 'mjpeg2',
+		        host : '192.168.38.100',
+                port : '8080',
+		        width : 1280,
+		        height : 640,
+                refreshRate : 30,
+                quality : 30,
+		        topic : '/cam_2/color/image_raw'
+	        });
         }
 
         var poseTopic = new ROSLIB.Topic({
@@ -491,6 +502,10 @@
               <div class="card">
                 <h2>Camera</h2> 
                 <div id="mjpeg"></div>
+              </div>
+              <div class="card">
+                <h2>Camera2</h2> 
+                <div id="mjpeg2"></div>
               </div>
             </div>
             <div class="rightcolumn">
