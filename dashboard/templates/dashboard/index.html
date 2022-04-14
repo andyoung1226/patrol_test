@@ -270,12 +270,19 @@
             }
         });
 
+    
         // These lines create a topic object for publish twist message
         var cmdVelTopic = new ROSLIB.Topic({
             ros : rbServer,
             name : '/cmd_vel',
             messageType : 'geometry_msgs/Twist'
         });
+
+        var light_con_topic = new ROSLIB.Topic({
+            ros : rbServer,
+            name : '/relay_con',
+            messageType : 'std_msgs/Int16MultiArray'
+        })
 
         // These lines create a message to identify the twist message.Identifying the msg is required for publishing.
         // It initalizes all properties to zero. They will be set to appropriate values before we publish this message.
@@ -290,6 +297,13 @@
                 y : 0.0,
                 z : 0.0
             }
+        });
+
+        var int16multiArray = new ROSLIB.Message({
+            layout : {
+
+            },
+            data : []
         });
 
         function radians_to_degrees(radians) {
@@ -336,15 +350,29 @@
         }
 
         function WarningLightOn() {
-
+            var WarningLight = document.getElementById('warning_light_status');
+            int16multiArray.data = [1, 1]
+            light_con_topic.publish(int16multiArray)
+            WarningLight.innerHTML = "<p> 경광등 : ON </p>"; 
         }
         function WarningLightOff() {
+            var WarningLight = document.getElementById('warning_light_status');
+            int16multiArray.data = [1, 0]
+            light_con_topic.publish(int16multiArray)
+            WarningLight.innerHTML = "<p> 경광등 : OFF </p>"; 
 
         }
         function LightOn() {
-
+            var light = document.getElementById('light_status');
+            int16multiArray.data = [0, 1]
+            light_con_topic.publish(int16multiArray)
+            light.innerHTML = "<p> 라이트 : ON </p>";
         }
         function LightOff() {
+            var light = document.getElementById('light_status');
+            int16multiArray.data = [0, 1]
+            light_con_topic.publish(int16multiArray)
+            light.innerHTML = "<p> 라이트 : OFF </p>";
 
         }
         function Patrol_1() {
@@ -468,6 +496,8 @@
                         <button class="WarningLightOffButton" type="button" ="Up" onclick="WarningLightOff()">경광등 끄기</button>
                         <button class="LightOnButton" type="button" ="Up" onclick="LightOn()">라이트 켜기</button>
                         <button class="LightOffButton" type="button" ="Up" onclick="LightOff()">라이트 끄기</button>
+                        <div id="warning_light_status" class="warning_status">경광등 : OFF</div>
+                        <div id="light_status" class="light_status">라이트 : OFF</div>
                     </div>
                 </div>
             </div>

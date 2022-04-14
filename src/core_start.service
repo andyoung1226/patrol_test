@@ -1,0 +1,8 @@
+[Unit]
+Description=Patrol Server auto start service
+
+[Service]
+ExecStart=/home/patrol1/~?/start_core.sh
+Restart=on-abort
+[Install]
+WantedBy=multi-user.target
