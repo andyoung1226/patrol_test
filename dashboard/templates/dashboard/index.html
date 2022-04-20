@@ -31,7 +31,7 @@
             var hour = currentDate.getHours();
             var minute = currentDate.getMinutes();
             var second = currentDate.getSeconds();
-            if(currentDate.getHours()>12){      //시간이 12보다 크다면 오후 아니면 오전
+            if(currentDate.getHours()>12){
                 msg += "오후 ";
                 msg += hour-12+"시 ";
             }
@@ -292,22 +292,44 @@
             messageType : 'geometry_msgs/Twist'
         });
 
-        var light_con_topic = new ROSLIB.Topic({
+        var relay_con_topic = new ROSLIB.Topic({
             ros : rbServer,
             name : '/relay_con_server',
             messageType : 'std_msgs/Int16MultiArray'
         });
 
+        var relay_status = new ROSLIB.Topic({
+            ros : rbServer,
+            name : '/relay_status',
+            messageType : 'std_msgs/Int16MultiArray'
+        })
         var distanceTopic = new ROSLIB.Topic({
             ros : rbServer,
             name : '/robot_distance',
             messageType : 'std_msgs/Float32'
         });
 
+        relay_status.subscribe(function(m){
+            var WarningButton = document.getElementById('WarningButton');
+            var LightButton = document.getElementById('LightButton');
+            if(m.data[0] == 0){
+                LightButton.innerHTML("라이트 켜기");
+            }
+            else{
+                LightButton.innerHTML("라이트 끄기");
+            }
+            if(m.data[1] == 0){
+                WarningButton.innerHTML("경광등 켜기");
+            }
+            else{
+                WarningButton.innerHTML("경광등 끄기");
+            }
+        })
         distanceTopic.subscribe(function(m){
             var distance = document.getElementById('distance');
             distance.innerHTML = m.data + " m";
         })
+
         // These lines create a message to identify the twist message.Identifying the msg is required for publishing.
         // It initalizes all properties to zero. They will be set to appropriate values before we publish this message.
         var twist = new ROSLIB.Message({
@@ -327,7 +349,7 @@
             layout : {
 
             },
-            data : []
+            data : [0, 0]
         });
 
         function radians_to_degrees(radians) {
@@ -379,30 +401,26 @@
         function WarningLight() {
             var WarningButton = document.getElementById('WarningButton');
             if (WarningLight_con) {
-                int16multiArray.data = [1, 0]
-                WarningButton.innerHTML = "경광등 ON";
+                int16multiArray.data[0] = 0;
                 WarningLight_con = false;
             }   
             else {
-                int16multiArray.data = [1, 1];
-                WarningButton.innerHTML = "경광등 OFF";
+                int16multiArray.data[0] = 1;
                 WarningLight_con = true;
             }
-            light_con_topic.publish(int16multiArray)
+            relay_con_topic.publish(int16multiArray)
         }
         function Light() {
             var WarningButton = document.getElementById('LightButton');
             if (Light_con) {
-                int16multiArray.data = [0, 0]
-                WarningButton.innerHTML = "라이트 ON";
+                int16multiArray.data[0] = 0;
                 Light_con = false;
             }
             else {
-                int16multiArray.data = [0, 1];
-                WarningButton.innerHTML = "라이트 OFF";
+                int16multiArray.data[0] = 1;
                 Light_con = true;
             }
-            light_con_topic.publish(int16multiArray)
+            relay_con_topic.publish(int16multiArray)
         }
 
         function Patrol_1() {
