@@ -76,7 +76,7 @@ body{
   padding: 20px;
 }
 .navermap {
-  position: relative;
+  position: absolute;
   opacity: 0.5;
 }
 /* Add a card effect for articles */
