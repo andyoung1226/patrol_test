@@ -313,15 +313,19 @@
             var WarningButton = document.getElementById('WarningButton');
             var LightButton = document.getElementById('LightButton');
             if(m.data[0] == 0){
+                console.log('light on changed')
                 LightButton.innerHTML("라이트 켜기");
             }
             else{
+                console.log('light off changed')
                 LightButton.innerHTML("라이트 끄기");
             }
             if(m.data[1] == 0){
+                console.log('warn on changed')
                 WarningButton.innerHTML("경광등 켜기");
             }
             else{
+                console.log('warn off changed')
                 WarningButton.innerHTML("경광등 끄기");
             }
         })
