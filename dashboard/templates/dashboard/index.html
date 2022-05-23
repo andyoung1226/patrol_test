@@ -401,11 +401,11 @@
         function WarningLight() {
             var WarningButton = document.getElementById('WarningButton');
             if (WarningLight_con) {
-                int16multiArray.data[0] = 0;
+                int16multiArray.data[1] = 0;
                 WarningLight_con = false;
             }   
             else {
-                int16multiArray.data[0] = 1;
+                int16multiArray.data[1] = 1;
                 WarningLight_con = true;
             }
             relay_con_topic.publish(int16multiArray)
