@@ -360,10 +360,10 @@ body{
 .AutoDriving{
   position:absolute;
   top:100px;
-  width:150px;
+  width:160px;
   height:70px;
   display:block;
-  left:100px;
+  left:80px;
   color:#000000;
   font-family:Courier New, Courier, monospace;
   background-color:#99ff3a;

@@ -441,19 +441,21 @@
         
         function PoseSetting_Callback() {
             int16.data = 1
-            initalposeTopic.publish(PoseSet)
+            initalposeTopic.publish(int16)
         }
-        
+
         var is_Auto = false
         function AutoDriving_Callback() {
             var AutoDriving_status = document.getElementById('AutoDriving')
             if (is_Auto){
-                int16.data = 1
-                AutoDriving_status.innerHTML = "자율주행 OFF"
-            }
-            else {
                 int16.data = 0
                 AutoDriving_status.innerHTML = "자율주행 ON"
+                is_Auto = true
+            }
+            else {
+                int16.data = 1
+                AutoDriving_status.innerHTML = "자율주행 OFF"
+                is_Auto = false
             }
             AutoDrivingTopic.publish(int16)
         }
