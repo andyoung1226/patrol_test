@@ -450,12 +450,12 @@
             if (is_Auto){
                 int16.data = 0
                 AutoDriving_status.innerHTML = "자율주행 ON"
-                is_Auto = true
+                is_Auto = false
             }
             else {
                 int16.data = 1
                 AutoDriving_status.innerHTML = "자율주행 OFF"
-                is_Auto = false
+                is_Auto = true
             }
             AutoDrivingTopic.publish(int16)
         }
