@@ -254,7 +254,9 @@
             //var poseTheta = document.getElementById('poseTheta');
             //poseTheta.innerHTML  = "Theta = " + message.pose.pose.orientation.w
             var poseLinVel = document.getElementById('poseLinVel');
-            poseLinVel.innerHTML  = message.twist.twist.linear.x + "m/s"
+            var linearVel = Math.round((message.twist.twist.linear.x * 10) / 10)
+
+            poseLinVel.innerHTML  = linearVel + "m/s"
             //var poseAngVel = document.getElementById('poseAngVel');
             //poseAngVel.innerHTML  = "AngVel = " + message.twist.twist.angular.z
         });
