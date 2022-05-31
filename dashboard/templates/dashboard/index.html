@@ -276,7 +276,7 @@
         moveBaseStatusTopic.subscribe(function(message) {
             var movebaseStatus = document.getElementById('movebaseStatus');
             if (message.status_list[0]==1) {
-                movebaseStatus.innerHTML = "로봇의 현재 상태 : 목적지로 이동중입니다!"
+                movebaseStatus.innerHTML = "로봇의 현재 상태 : 자율주행 중입니다!"
             }
             else if (message.status_list[0]==3) {
                 movebaseStatus.innerHTML = "로봇의 현재 상태 : 목적지에 도착했습니다!"
@@ -449,14 +449,20 @@
         var is_Auto = false
         function AutoDriving_Callback() {
             var AutoDriving_status = document.getElementById('AutoDriving')
+            var movebaseStatus = document.getElementById('movebaseStatus');
+
             if (is_Auto){
                 int16.data = 0
                 AutoDriving_status.innerHTML = "자율주행 ON"
+                movebaseStatus.innerHTML = "로봇의 현재 상태 : 순찰 명령을 기다리는 중입니다!"
+
                 is_Auto = false
             }
             else {
                 int16.data = 1
+                movebaseStatus.innerHTML = "로봇의 현재 상태 : 자율주행 중입니다!"
                 AutoDriving_status.innerHTML = "자율주행 OFF"
+                
                 is_Auto = true
             }
             AutoDrivingTopic.publish(int16)
