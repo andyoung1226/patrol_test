@@ -254,7 +254,7 @@
             //var poseTheta = document.getElementById('poseTheta');
             //poseTheta.innerHTML  = "Theta = " + message.pose.pose.orientation.w
             var poseLinVel = document.getElementById('poseLinVel');
-            var linearVel = Math.round((message.twist.twist.linear.x * 10) / 10)
+            var linearVel = message.twist.twist.linear.x.toFixed(2)
 
             poseLinVel.innerHTML  = linearVel + "m/s"
             //var poseAngVel = document.getElementById('poseAngVel');
