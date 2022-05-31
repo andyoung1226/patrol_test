@@ -1,3 +1,5 @@
+@import url(//fonts.googleapis.com/earlyaccess/jejugothic.css);
+
 *{
   box-sizing: border-box;
 }
@@ -21,6 +23,9 @@ body{
   position: relative;
   display: inline-block;
   text-align: center;
+}
+.row {
+  display: flex;
 }
 .clock {
   font-size: 25px;
@@ -57,15 +62,30 @@ body{
 }
 /* Create two unequal columns that floats next to each other */
 /* Left column */
+.map_frame {
+  font-size: 35px;
+  font-weight: bold;
+  text-align: center;
+  padding-bottom: 5px;
+}
 .leftcolumn {   
   float: left;
-  width: 75%;
+  /*width: 75%;*/
+  flex: 7;
   padding-left: 5px;
+}
+.middlecolumn {
+  float: left;
+  /*width: 5%;*/
+  flex: 0.05;
+  padding-left: 5px;
+  background-color: #000000;
 }
 /* Right column */
 .rightcolumn {
   float: left;
-  width: 25%;
+  /*width: 20%;*/
+  flex: 2.95;
   background-color: #ffffff;
   padding-left: 10px;
 }
@@ -86,19 +106,43 @@ body{
   padding: 5px;
   margin-top: 10px;
 }
+.map_card {
+  position: relative;
+  background-color: white;
+  padding: 5px;
+  margin-top: 10px;
+}
 .card h5 {
   position: absolute;
   bottom: 3px;
   right: 0px;
 }
-.pose {
+.velocity {
   position: absolute;
-  top: 70px;
-  left : 10px;
-  color: black;
+  top: 100px;
+  left: 5px;  
+}
+.cur_vel {
+  font-size: 20px;
+}
+.pose {
+  display: inline;
+  border-style: solid;
+  border-width: 3px;
+  padding: 2px;
+  border-radius: 20px;
+  position: absolute;
+  top: 0px;
+  left : 100px;
+  color: rgb(102, 0, 255);
   font-family: Arial, Helvetica, sans-serif;
   font-size: 20px;
   font-weight: 50;
+  text-align: center;
+  box-sizing: border-box;
+  width : 250px;
+  height: 35px;
+  word-break: break-all;
 }
 .map_con_card {
   position: absolute;
@@ -119,19 +163,20 @@ body{
   display: table;
   clear: both;
 }
+/*
 @media screen and (max-width: 800px) {
   .leftcolumn, .rightcolumn {   
       width: 100%;
       padding: 0;
   }
 }
-/* Responsive layout - when the screen is less than 400px wide, make the navigation links stack on top of each other instead of next to each other */
 @media screen and (max-width: 400px) {
   .topnav a {
       float: none;
       width: 100%;
   }
 }
+*/
 .GwanakLogo img {
   position:absolute;
   top:10px;
@@ -168,6 +213,8 @@ body{
   background-color:white;
   border:5px groove black;
   font-weight:900;
+  border-radius: 20px;
+
 }
 .MapZoomButton{
   position:absolute;
@@ -181,20 +228,24 @@ body{
   background-color:white;
   border:5px groove #000000;
   font-weight:900;
+  border-radius: 20px;
+
 }
 
 .EmergencyStopButton{
   position:absolute;
   top:50px;
-  width:100px;
-  height:70px;
+  width:150px;
+  height:100px;
   display:block;
-  left: 100px;
+  left: 80px;
   color:#ffffff;
   font-family:Courier New, Courier, monospace;
   background-color:#ff0015;
   border:5px groove #000000;
   font-weight:900;
+  border-radius: 20px;
+
 }
 .LeftButton{
   position:absolute;
@@ -265,6 +316,16 @@ body{
   padding: 5px;
   margin-top: 5px;
 }
+
+.Auto {
+  position: absolute;
+  top : 450px;
+  left : 2px;
+  background-color: white;
+  padding: 5px;
+  margin-top: 5px;
+}
+
 .WarningLightOnButton{
   position:absolute;
   top:200px;
@@ -274,9 +335,10 @@ body{
   left:30px;
   color:#000000;
   font-family:Courier New, Courier, monospace;
-  background-color:#88f011;
+  background-color:#d5ff63;
   border:5px groove #000000;
   font-weight:900;
+  border-radius: 20px;
 }
 
 .LightOnButton{
@@ -288,11 +350,44 @@ body{
   left:170px;
   color:#000000;
   font-family:Courier New, Courier, monospace;
-  background-color:#cb11f0;
+  background-color:#d5ff63;
   border:5px groove #000000;
   font-weight:900;
+  border-radius: 20px;
+
 }
 
+.AutoDriving{
+  position:absolute;
+  top:0px;
+  width:120px;
+  height:70px;
+  display:block;
+  left:100px;
+  color:#000000;
+  font-family:Courier New, Courier, monospace;
+  background-color:#99ff3a;
+  border:5px groove #000000;
+  font-weight:900;
+  border-radius: 20px;
+
+}
+
+.PoseSetting{
+  position:absolute;
+  top:100px;
+  width:120px;
+  height:70px;
+  display:block;
+  left:100px;
+  color:#000000;
+  font-family:Courier New, Courier, monospace;
+  background-color:#99ff3a;
+  border:5px groove #000000;
+  font-weight:900;
+  border-radius: 20px;
+
+}
 
 .modal-overlay {
   width: 100%;

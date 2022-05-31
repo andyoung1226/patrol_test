@@ -254,7 +254,7 @@
             //var poseTheta = document.getElementById('poseTheta');
             //poseTheta.innerHTML  = "Theta = " + message.pose.pose.orientation.w
             var poseLinVel = document.getElementById('poseLinVel');
-            poseLinVel.innerHTML  = "LinVel = " + message.twist.twist.linear.x
+            poseLinVel.innerHTML  = message.twist.twist.linear.x + "m/s"
             //var poseAngVel = document.getElementById('poseAngVel');
             //poseAngVel.innerHTML  = "AngVel = " + message.twist.twist.angular.z
         });
@@ -499,17 +499,17 @@
         </div>
         <! Menu Bar >
         <div class="topnav">
-            <a href="#">Main</a>
-            <a href="#">Data</a>
-            <a href="#">미정</a>
+            <a href="#"></a>
+            <a href="#"></a>
+            <a href="#"></a>
             <a href="#" style="float:right" onclick="modal_record_On()">주행기록</a>
             <a href="#" style="float:right" onclick="modalOn()">순찰경로</a>
 
         </div> 
         <div class="row">
             <div class="leftcolumn">
-                <div class="card">
-                    <h3>순찰로봇 지도</h3>
+                <div class="map_card">
+                    <div class="map_frame">순찰로봇 지도</div>
                     <div id="movebaseStatus"></div>
                     <div style="position: relative;" id="nav2dmap">
                         <div class="navermap">
@@ -526,7 +526,9 @@
                     <div id="mjpeg2"></div>
                 </div>
             </div>
+            <div class="middlecolumn">
 
+            </div>
             <div class="rightcolumn">
                 <div class="card">
                     <h2>Control Center</h2>
@@ -536,19 +538,26 @@
                         <button class="MapZoomButton" type="button" ="Up" onclick="MapZoomFunc()">지도 확대</button>
                         <button class="MapPanButton" type="button" ="Up" onclick="MapPanFunc()">지도 축소</button>
                     </div>
-                    <div class="pose" id="poseLinVel"><h4>현재 속도 : <h4></div>
+                    <div class="velocity">
+                      <div class="cur_vel">현재 속도 : </div>
+                      <div class="pose" id="poseLinVel">0m/s</div>
+                    </div>
                     <div class="robot_con_card">
+                        <!--
                         <button class="UpButton" type="button" ="Up" onclick="goforward()">Up</button>
                         <button class="DownButton" type="button" ="Up" onclick="gobackward()">Down</button>
                         <button class="LeftButton" type="button" ="Up" onclick="turnleft()">Left</button>
-                        <button class="RightButton" type="button" ="Up" onclick="turnright()">Right</button>
+                        <button class="RightButton" type="button" ="Up" onclick="turnright()">Right</button>-->
                         <button class="EmergencyStopButton" type="button" ="Up" onclick="EmergencyStop()">EMERGENCY STOP!</button>
                     </div>
                     <div class="robot_light_con">
                         <button class="WarningLightOnButton" type="button" ="Up" id="WarningButton" onclick="WarningLight()">경광등 켜기</button>
                         <button class="LightOnButton" type="button" ="Up" onclick="Light()" id="LightButton">라이트 켜기</button>
                     </div>
-                </div>
+                    <div class="Auto">
+                      <button class="AutoDriving" type="button" ="Up" id="AutoDriving" onclick="AutoDriving_Callback()">자율주행 시작</button>
+                      <button class="PoseSetting" type="button" ="Up" id="PoseSetting" onclick="PoseSetting_Callback()">위치 초기화</button>
+                    </div>
             </div>
         </div>
         <! MODAL >
