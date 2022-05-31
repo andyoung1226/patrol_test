@@ -309,6 +309,18 @@
             messageType : 'std_msgs/Float32'
         });
 
+        var initalposeTopic = new ROSLIB.Topic({
+            ros : rbServer,
+            name : '/init',
+            messageType : 'std_msgs/Int16'
+        })
+
+        var AutoDrivingTopic = new ROSLIB.Topic({
+            ros : rbServer,
+            name : 'mode',
+            messageType : 'std_msgs/Int16'
+        })
+
         relay_status.subscribe(function(m){
             var WarningButton = document.getElementById('WarningButton');
             var LightButton = document.getElementById('LightButton');
@@ -351,6 +363,10 @@
             },
             data : [0, 0]
         });
+
+        var int16 = new ROSLIB.Message({
+            data : 0
+        })
 
         function radians_to_degrees(radians) {
             const pi = Math.PI;
@@ -422,7 +438,25 @@
             }
             relay_con_topic.publish(int16multiArray)
         }
-
+        
+        function PoseSetting_Callback() {
+            int16.data = 1
+            initalposeTopic.publish(PoseSet)
+        }
+        
+        var is_Auto = false
+        function AutoDriving_Callback() {
+            var AutoDriving_status = document.getElementById('AutoDriving')
+            if (is_Auto){
+                int16.data = 1
+                AutoDriving_status.innerHTML = "자율주행 OFF"
+            }
+            else {
+                int16.data = 0
+                AutoDriving_status.innerHTML = "자율주행 ON"
+            }
+            AutoDrivingTopic.publish(int16)
+        }
         function Patrol_1() {
 
         }
@@ -555,8 +589,8 @@
                         <button class="LightOnButton" type="button" ="Up" onclick="Light()" id="LightButton">라이트 켜기</button>
                     </div>
                     <div class="Auto">
-                      <button class="AutoDriving" type="button" ="Up" id="AutoDriving" onclick="AutoDriving_Callback()">자율주행 시작</button>
-                      <button class="PoseSetting" type="button" ="Up" id="PoseSetting" onclick="PoseSetting_Callback()">위치 초기화</button>
+                        <button class="PoseSetting" type="button" ="Up" id="PoseSetting" onclick="PoseSetting_Callback()">위치 초기화</button>
+                        <button class="AutoDriving" type="button" ="Up" id="AutoDriving" onclick="AutoDriving_Callback()">자율주행 ON</button>
                     </div>
             </div>
         </div>

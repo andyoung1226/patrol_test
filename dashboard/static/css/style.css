@@ -359,8 +359,8 @@ body{
 
 .AutoDriving{
   position:absolute;
-  top:0px;
-  width:120px;
+  top:100px;
+  width:150px;
   height:70px;
   display:block;
   left:100px;
@@ -375,7 +375,7 @@ body{
 
 .PoseSetting{
   position:absolute;
-  top:100px;
+  top:0px;
   width:120px;
   height:70px;
   display:block;
