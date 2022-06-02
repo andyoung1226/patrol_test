@@ -278,11 +278,8 @@
             if (message.status_list[0]==1) {
                 movebaseStatus.innerHTML = "로봇의 현재 상태 : 자율주행 중입니다!"
             }
-            else if (message.status_list[0]==3) {
+            if (message.status_list[0]==3) {
                 movebaseStatus.innerHTML = "로봇의 현재 상태 : 목적지에 도착했습니다!"
-            }
-            else {
-                movebaseStatus.innerHTML = "로봇의 현재 상태 : 순찰 명령을 기다리는 중입니다!"
             }
         });
 
