@@ -379,7 +379,22 @@ body{
   width:120px;
   height:70px;
   display:block;
-  left:100px;
+  left:40px;
+  color:#000000;
+  font-family:Courier New, Courier, monospace;
+  background-color:#99ff3a;
+  border:5px groove #000000;
+  font-weight:900;
+  border-radius: 20px;
+
+}
+.PoseSetting2{
+  position:absolute;
+  top:0px;
+  width:120px;
+  height:70px;
+  display:block;
+  left:180px;
   color:#000000;
   font-family:Courier New, Courier, monospace;
   background-color:#99ff3a;
