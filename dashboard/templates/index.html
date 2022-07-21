@@ -1,4 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
 {% load static %}
+
 <!doctype html>
 <html lang="ko">
     <!HEAD START>
@@ -529,6 +536,7 @@
         <div class="header">
             <h2>관악구 순찰로봇 관제시스템</h2>
             <p>Made by UNICON LAB.</p>
+            <p><a href="{% url 'logout' %}">Log Out</a></p>
             <div class="feedback_Text" id="feedback"></div>
             <div class="clock" >
                 <span id="clock">asdfadsf</span>
@@ -690,3 +698,9 @@
         </form>
     </body>
 <html> -->
+{% else %}
+  <p>You are not logged in</p>
+  <a href="{% url 'login' %}">Log In</a>
+{% endif %}
+{% endblock %}
+
