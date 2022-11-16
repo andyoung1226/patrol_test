@@ -64,6 +64,7 @@
         var seconds = 0;
         var taken_time = 0;
         let Time = 0;
+        var is_connected_ros = false;
         function current_time(){
             var time = new Date();
             var hour = time.getHours();
@@ -100,6 +101,7 @@
             // Write appropriate message to #feedback div when successfully connected to rosbridge
             var fbDiv = document.getElementById('feedback')
             fbDiv.innerHTML = "<p>ROS 연결 상태 : 연결이 정상적으로 이루어졌습니다!</p>";
+            is_connected_ros = true
         });
 
         // This function is called when there is an error attempting to connect to rosbridge
@@ -107,6 +109,8 @@
             // Write appropriate message to #feedback div upon error when attempting to connect to rosbridge
             var fbDiv = document.getElementById('feedback');
             fbDiv.innerHTML = "<p>Connection Status: Error connecting to websocket server</p>";
+            is_connected_ros = false
+
         });
 
         // This function is called when the connection to rosbridge is closed
@@ -121,6 +125,8 @@
                 localStorage.setItem('taken_time', JSON.stringify({hour: hours, minute: minutes, second: seconds}));
             }
             is_saved = false;
+            is_connected_ros = false
+
         });
 
         //Navigation and Map linses START-------------------
@@ -448,11 +454,37 @@
         function PoseSetting_Callback() {
             int16.data = 1
             initalposeTopic.publish(int16)
+            if (is_connected_ros == true){
+            var poseset = document.getElementById('posesetting');
+            poseset.innerHTML = "pose 1-1 setting finished!"
+            }
         }
 
         function PoseSetting_Callback2() {
             int16.data = 2
             initalposeTopic.publish(int16)
+            if (is_connected_ros==true){
+            var poseset = document.getElementById('posesetting');
+            poseset.innerHTML = "pose 1-2 setting finished!"
+            }
+        }
+
+        function PoseSetting_Callback3() {
+            int16.data = 3
+            initalposeTopic.publish(int16)
+            if (is_connected_ros==true){
+            var poseset = document.getElementById('posesetting');
+            poseset.innerHTML = "pose 2-1 setting finished!"
+            }
+        }
+
+        function PoseSetting_Callback4() {
+            int16.data = 4
+            initalposeTopic.publish(int16)
+            if (is_connected_ros==true){
+            var poseset = document.getElementById('posesetting');
+            poseset.innerHTML = "pose 2-2 setting finished!"
+            }
         }
 
         var is_Auto = false
@@ -530,7 +562,7 @@
     </head>
     <!HEAD END>
     <!BODY START>
-    <body onload="nav_and_map_init(); showClock(); load_time(); updateTimer(); ">
+    <body onload="showClock(); load_time(); updateTimer(); ">
         <! cam_init() >
         <! header >
         <div class="header">
@@ -564,20 +596,10 @@
             <div class="leftcolumn">
                 <div class="map_card">
                     <div class="map_frame">순찰로봇 지도</div>
+                    <div id="posesetting"></div>
                     <div id="movebaseStatus"></div>
                     <div style="position: relative;" id="nav2dmap">
-                        <div class="navermap">
-                            <img src="{% static 'img/navermap_new.png' %}" width="1300" height="800" alt="navermap"/>
-                        </div>
                     </div>
-                </div>
-                <div class="card">
-                    <h2>Camera</h2> 
-                    <div id="mjpeg"></div>
-                </div>
-                <div class="card">
-                    <h2>Camera2</h2> 
-                    <div id="mjpeg2"></div>
                 </div>
             </div>
             <div class="middlecolumn">
@@ -609,8 +631,10 @@
                         <button class="LightOnButton" type="button" ="Up" onclick="Light()" id="LightButton">라이트 켜기</button>
                     </div>
                     <div class="Auto">
-                        <button class="PoseSetting" type="button" ="Up" id="PoseSetting" onclick="PoseSetting_Callback()">위치 1번 세팅</button>
-                        <button class="PoseSetting2" type="button" ="Up" id="PoseSetting2" onclick="PoseSetting_Callback2()">위치 2번 세팅</button>
+                        <button class="PoseSetting" type="button" ="Up" id="PoseSetting" onclick="PoseSetting_Callback()">위치 1-1</button>
+                        <button class="PoseSetting2" type="button" ="Up" id="PoseSetting2" onclick="PoseSetting_Callback2()">위치 1-2</button>
+                        <button class="PoseSetting3" type="button" ="Up" id="PoseSetting3" onclick="PoseSetting_Callback3()">위치 2-1</button>
+                        <button class="PoseSetting4" type="button" ="Up" id="PoseSetting4" onclick="PoseSetting_Callback4()">위치 2-2</button>
                         <button class="AutoDriving" type="button" ="Up" id="AutoDriving" onclick="AutoDriving_Callback()">자율주행 ON</button>
                     </div>
             </div>
